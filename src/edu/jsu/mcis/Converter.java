@@ -68,6 +68,34 @@ public class Converter {
             Iterator<String[]> iterator = full.iterator();
             
             // INSERT YOUR CODE HERE
+            LinkedHashMap<String, JSONArray> records = new LinkedHashMap<>();
+            JSONArray colHeaders = new JSONArray();
+            String line[] = iterator.next();
+            for (int i = 0; i < line.length; ++i) {
+                colHeaders.add(line[i]);
+            }
+            JSONArray rowHeaders = new JSONArray();
+            JSONArray data = new JSONArray();
+         
+           while (iterator.hasNext()) {
+               line = iterator.next();
+               rowHeaders.add(line[0]);
+               JSONArray temp = new JSONArray();
+               List<String> list = new ArrayList<String>();
+               Collections.addAll(list, line);
+               list.remove(line[0]);
+               line = list.toArray(new String[list.size()]);
+               //temp.add(Arrays.toString(line));
+               for (int i = 0; i < line.length; ++i) {
+                   temp.add(Integer.parseInt(line[i]));      
+               }
+               data.add(temp);
+             
+           }
+            records.put("rowHeaders", rowHeaders);
+            records.put("data", data);
+            records.put("colHeaders", colHeaders);
+            results = JSONValue.toJSONString(records);
             
         }        
         catch(Exception e) { return e.toString(); }
