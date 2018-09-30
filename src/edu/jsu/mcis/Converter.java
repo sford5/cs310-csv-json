@@ -85,7 +85,6 @@ public class Converter {
                Collections.addAll(list, line);
                list.remove(line[0]);
                line = list.toArray(new String[list.size()]);
-               //temp.add(Arrays.toString(line));
                for (int i = 0; i < line.length; ++i) {
                    temp.add(Integer.parseInt(line[i]));      
                }
@@ -114,6 +113,44 @@ public class Converter {
             CSVWriter csvWriter = new CSVWriter(writer, ',', '"', '\n');
             
             // INSERT YOUR CODE HERE
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject)parser.parse(jsonString);
+            
+            JSONArray colHeadersList = (JSONArray)(jsonObject.get("colHeaders"));
+            JSONArray rowHeadersList = (JSONArray)(jsonObject.get("rowHeaders"));
+            JSONArray dataList = (JSONArray)(jsonObject.get("data"));
+            String[] colHeaders = new String[colHeadersList.size()];
+            String[] rowHeaders = new String[rowHeadersList.size()];
+            String[] data = new String[dataList.size()];
+            for (int i = 0; i < colHeadersList.size(); i++) {
+                colHeaders[i] = colHeadersList.get(i).toString();
+               
+            }
+            csvWriter.writeNext(colHeaders);
+            
+            for (int i = 0; i < rowHeadersList.size(); i++) {
+                rowHeaders[i] = rowHeadersList.get(i).toString();
+                data[i] = dataList.get(i).toString();
+            }
+            
+            for (int i = 0; i < data.length; i++) {
+                JSONArray dataValues = (JSONArray) parser.parse(data[i]);
+                String[] row = new String[dataValues.size() + 1];
+                row[0] = rowHeaders[i];  
+                row[1] = dataValues.get(0).toString();
+                row[2] = dataValues.get(1).toString();
+                row[3] = dataValues.get(2).toString();
+                row[4] = dataValues.get(3).toString();
+                csvWriter.writeNext(row);
+                
+            }
+            
+    
+
+            
+            results = writer.toString();
+                     
+            
             
         }
         
